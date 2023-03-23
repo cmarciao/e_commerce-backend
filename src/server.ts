@@ -1,11 +1,11 @@
 import express from "express";
 import "dotenv";
+import { routes } from "./routes";
 
 const app = express();
 
-app.get("/", (req, res) => {
-    return res.send("Hello World!");
-});
+app.use(express.json());
+app.use(routes);
 
 const port = process.env.SERVER_PORT || 3333;
 
