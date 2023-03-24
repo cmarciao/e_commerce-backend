@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AppError } from "../../errors/AppError";
 
 import { encryptData } from "../../utils/crypt";
 import { errorListFormatter } from "../../utils/formatter";
@@ -14,18 +15,14 @@ class UserController {
 
         if(errorsList.length) {
             const commentError = errorListFormatter(errorsList);
-
-            return res.status(400).json({
-                error: commentError
-            });
+            
+            throw new AppError(commentError);
         }
 
         const userAlreadyExists = await UsersRepository.findByEmail(email);
         
         if(userAlreadyExists) {
-            return res.status(400).json({
-                error: "User already exists."
-            });
+            throw new AppError("User already exists.");
         }
         
         const encryptedPassword = await encryptData(password);
