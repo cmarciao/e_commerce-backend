@@ -1,11 +1,27 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
+
+import "express-async-errors";
 import "dotenv";
+
 import { routes } from "./routes";
+import { AppError } from "./errors/AppError";
 
 const app = express();
 
 app.use(express.json());
 app.use(routes);
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    if(err instanceof AppError) {
+        return res.status(err.statusCode).json({
+            error: err.message
+        });
+    }
+
+    return res.status(500).json({
+        error: err.message
+    });
+});
 
 const port = process.env.SERVER_PORT || 3333;
 
