@@ -5,10 +5,12 @@ import "dotenv";
 
 import { routes } from "./routes";
 import { AppError } from "./errors/AppError";
+import cors from "./app/middlewares/cors";
 
 const app = express();
 
 app.use(express.json());
+app.use(cors)
 app.use(routes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
