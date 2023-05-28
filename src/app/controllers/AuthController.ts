@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import { AppError } from "../../errors/AppError";
+import { AppError } from "../errors/AppError";
 
 import { errorListFormatter } from "../utils/formatter";
 import { emptyPropertyList } from "../utils/validator";

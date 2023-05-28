@@ -4,7 +4,7 @@ import "express-async-errors";
 import "dotenv";
 
 import { routes } from "./routes";
-import { AppError } from "./errors/AppError";
+import { AppError } from "./app/errors/AppError";
 import cors from "./app/middlewares/cors";
 
 const app = express();
