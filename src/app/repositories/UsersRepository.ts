@@ -11,15 +11,28 @@ interface CreateUserProps {
 class UsersRepository {
     async findAll(): Promise<User[][]> {
         const { rows } = await db.query<User[]>(`
-            SELECT * FROM users
+            SELECT *
+            FROM users
         `);
 
         return rows;
     }
 
+    async findById(id: string) {
+        const { rows } = await db.query(`
+            SELECT *
+            FROM users
+            WHERE id = $1
+        `, [id]);
+        const [response] = rows;
+
+        return response;
+    }
+
     async findByEmail(email: string): Promise<User> {
         const { rows } = await db.query<User>(`
-            SELECT * FROM users
+            SELECT *
+            FROM users
             WHERE email = $1
         `, [email]);
 

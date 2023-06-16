@@ -8,6 +8,11 @@ import { emptyPropertyList } from "../utils/validator";
 import UsersRepository from "../repositories/UsersRepository";
 
 class UserController {
+    async index(req: Request, res: Response) {
+        const user = await UsersRepository.findAll();
+        return res.status(200).json(user);
+    }
+
     async store(req: Request, res: Response) {
         const { name, email, password } = req.body;
 
