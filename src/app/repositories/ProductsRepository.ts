@@ -9,6 +9,15 @@ class ProductsRepository {
         return response;
     }
 
+    async findById(productId: string): Promise<Product> {
+        const {rows: [response]} = await db.query(
+            "SELECT * FROM products WHERE id=$1", 
+            [productId]
+        );
+        
+        return response;
+    }
+
     async create({ name, price, url_photo, stock_quantity }: ICreateProduct) {
         const {rows} = await db.query(`
             INSERT INTO products (name, price, url_photo, stock_quantity)
