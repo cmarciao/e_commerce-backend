@@ -20,7 +20,7 @@ class UsersRepository {
 
     async findById(id: string) {
         const { rows } = await db.query(`
-            SELECT *
+            SELECT id, name, email
             FROM users
             WHERE id = $1
         `, [id]);
