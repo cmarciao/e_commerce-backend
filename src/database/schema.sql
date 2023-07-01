@@ -35,7 +35,6 @@ CREATE TABLE carts (
 CREATE TABLE cart_items (
     id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
     created_at TIMESTAMP NOT NULL DEFAULT now(),
-    updated_at TIMESTAMP NOT NULL DEFAULT now(),
     product_id UUID,
     cart_id UUID,
 
