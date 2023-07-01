@@ -3,8 +3,9 @@ import CartController from "../app/controllers/CartController";
 
 const cartRoutes = Router();
 
-cartRoutes.get('/', CartController.index);
-cartRoutes.post('/', CartController.store);
-cartRoutes.delete('/:id', CartController.delete);
+cartRoutes.get('/', CartController.show);
+cartRoutes.patch('/add-products', CartController.addProduct);
+cartRoutes.patch('/remove-products', CartController.removeProduct);
+cartRoutes.patch('/remove-cart-items', CartController.removeCartItem);
 
 export { cartRoutes };
