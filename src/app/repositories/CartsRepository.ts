@@ -25,5 +25,16 @@ class CartsRepository {
 
         return response;
     }
+
+    async update(id: string, amount: number, total: number, updated_at: Date) {
+        await db.query(`
+            UPDATE carts
+            SET
+                amount = $1,
+                total = $2,
+                updated_at = $3
+            WHERE id = $4;
+        `, [amount, total, updated_at, id]);
+    }
 }
 export default new CartsRepository();

@@ -17,7 +17,7 @@ class CartItemsRepository {
 
     async listItemsByCartId(cart_id: string): Promise<CartItem[]> {
         const { rows } = await db.query(`
-            SELECT ci.*, 
+            SELECT DISTINCT ON(ci.product_id) ci.*, 
                 (
                     SELECT COUNT(*)
                     FROM cart_items
@@ -30,10 +30,47 @@ class CartItemsRepository {
         return rows;
     }
 
-    async delete(id: string) {
+    async getProductsAmount(cart_id: string) {
+        const { rows } = await db.query(`
+            SELECT COUNT(*) AS amount
+            FROM cart_items
+            WHERE cart_id = $1
+        `, [cart_id]);
+        const [response] = rows;
+        
+        return response.amount;
+    }
+    
+    async getProductsTotal(cart_id: string) {
+        const { rows } = await db.query(`
+        SELECT SUM(p.price) AS total
+        FROM cart_items AS c
+        JOIN products AS p
+        ON p.id = c.product_id
+        WHERE c.cart_id = $1
+        `, [cart_id]);
+        const [response] = rows;
+        
+        return response.total;
+    }
+
+    async deleteCartItemByProductId(id: string) {
         await db.query(`
             DELETE FROM cart_items
             WHERE product_id = $1
+        `, [id]);
+    }
+
+    async delete(id: string) {
+        await db.query(`
+            DELETE FROM cart_items
+            WHERE id IN (
+                SELECT id
+                FROM cart_items
+                WHERE product_id = $1
+                ORDER BY id DESC
+                LIMIT 1
+            );
         `, [id]);
     }
 }

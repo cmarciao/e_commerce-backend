@@ -1,96 +1,40 @@
 import { Request, Response } from "express";
-import CartsRepository from "../repositories/CartsRepository";
-
-import { emptyPropertyList } from "../utils/validator";
-import { errorListFormatter } from "../utils/formatter";
-
-import { AppError } from "../errors/AppError";
-import UsersRepository from "../repositories/UsersRepository";
-import ProductsRepository from "../repositories/ProductsRepository";
-import CartItemsRepository from "../repositories/CartItemsRepository";
+import CartService from "../services/CartService";
 
 class CartController {
-    async index(req: Request, res: Response) {
+    async show(req: Request, res: Response) {
         const user_id = req.headers['x-user-id'] as string;
 
-        const isUserExists = await UsersRepository.findById(user_id);
-
-        if(!isUserExists) {
-            throw new AppError('User not found!');
-        }
-
-        const cartDb = await CartsRepository.findByUserId(user_id);
-        const cartItemsDb = await CartItemsRepository.listItemsByCartId(cartDb.id);
-        const products = [];
-
-        for(const item of cartItemsDb){
-            const product = await ProductsRepository.findById(item.product_id);
-            products.push({
-                ...product,
-                amount: item.amount
-            });
-        }
-
-        const cart = {
-            ...cartDb,
-            products
-        }
+        const cart = await CartService.getCartByUserId(user_id);
 
         return res.status(200).json(cart);
     }
 
-    async store(req: Request, res: Response) {
-        const { user_id, products_ids } = req.body;
-        
-        const errorsList = emptyPropertyList({ user_id, products_ids });
+    async addProduct(req: Request, res: Response) {
+        const user_id = req.headers['x-user-id'] as string;
+        const { product_ids } = req.body;
 
-        if(errorsList.length) {
-            const commentError = errorListFormatter(errorsList);
-            
-            throw new AppError(commentError);
-        }
+        const cart = await CartService.addProducts(user_id, product_ids);
 
-        const isUserExists = await UsersRepository.findById(user_id);
-
-        if(!isUserExists) {
-            throw new AppError('User not found!');
-        }
-
-        let total = 0;
-        let amount = 0;
-
-        for(const productId of products_ids) {
-            const product = await ProductsRepository.findById(productId);
-
-            if(!product) {
-                throw new AppError('Product not found!');
-            }
-
-            amount++;
-            total += product.price;
-        }
-
-        const cart = await CartsRepository.create({ user_id, amount, total });
-
-        for(const productId of products_ids) {
-            await CartItemsRepository.create({
-                cart_id: cart.id,
-                product_id: productId
-            });
-        };
-
-        return res.status(201).json()
+        return res.status(201).json(cart);
     }
 
-    async delete(req: Request, res: Response) {
+    async removeProduct(req: Request, res: Response) {
         const user_id = req.headers['x-user-id'] as string;
-        const { id } = req.params;
+        const { product_id } = req.body;
 
-        /** CHECK IF USER HAS PERMISSION TO DELETE CART */
+        const cart = await CartService.removeProduct(user_id, product_id)
 
-        await CartItemsRepository.delete(id);
+        return res.status(200).json(cart);
+    }
+    
+    async removeCartItem(req: Request, res: Response) {
+        const user_id = req.headers['x-user-id'] as string;
+        const { product_id } = req.body;
 
-        return res.sendStatus(200);
+        const cart = await CartService.removeCartItem(user_id, product_id)
+
+        return res.status(200).json(cart);
     }
 }
 
