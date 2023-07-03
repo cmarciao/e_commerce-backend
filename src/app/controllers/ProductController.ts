@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import ProductsRepository from "../repositories/ProductsRepository";
 import Product from "../models/Product";
+import ProductService from "../services/ProductService";
 
 type ICreateProduct = Omit<Product, 'id'>
 
 class ProductController {
     async index(req: Request, res: Response) {
-        const products = await ProductsRepository.findAll();
-        res.status(200).json(products);
+        const products = await ProductService.listProducts();
+        return res.status(200).json(products);
     }
     
     async store(req: Request, res: Response) {
@@ -18,12 +19,7 @@ class ProductController {
             stock_quantity
         } = req.body;
 
-        const product = await ProductsRepository.create({
-            name,
-            price,
-            url_photo,
-            stock_quantity
-        });
+        const product = await ProductService.createProduct({ name, price, url_photo, stock_quantity });
 
         return res.status(201).json(product);
     }
