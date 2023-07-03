@@ -8,11 +8,10 @@ import { areFilledFields } from "../app/middlewares/isEmptyPropertyList";
 
 const routes = Router();
 
-routes.use("/", authRoutes);
-routes.use("/users", userRoutes);
-
 routes.use(areFilledFields);
 
+routes.use("/", authRoutes);
+routes.use("/users", userRoutes);
 routes.use("/products", productRoutes);
 routes.use("/carts", cartRoutes);
 
