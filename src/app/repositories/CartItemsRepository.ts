@@ -41,7 +41,7 @@ class CartItemsRepository {
         return response.amount;
     }
     
-    async getProductsTotal(cart_id: string) {
+    async getCartItemsTotalPrice(cart_id: string) {
         const { rows } = await db.query(`
         SELECT SUM(p.price) AS total
         FROM cart_items AS c
@@ -54,14 +54,14 @@ class CartItemsRepository {
         return response.total;
     }
 
-    async deleteCartItemByProductId(id: string) {
+    async deleteAllItemsByProductId(product_id: string) {
         await db.query(`
             DELETE FROM cart_items
             WHERE product_id = $1
-        `, [id]);
+        `, [product_id]);
     }
 
-    async delete(id: string) {
+    async deleteOneItemByProductId(product_id: string) {
         await db.query(`
             DELETE FROM cart_items
             WHERE id IN (
@@ -71,7 +71,7 @@ class CartItemsRepository {
                 ORDER BY id DESC
                 LIMIT 1
             );
-        `, [id]);
+        `, [product_id]);
     }
 }
 

@@ -27,6 +27,14 @@ class ProductsRepository {
 
         return response;
     }
+
+    async updateStockQuantityById(product_id: string, stock_quantity: number) {
+        await db.query(`
+            UPDATE products
+            SET stock_quantity=$1
+            WHERE id = $2;
+        `, [stock_quantity, product_id]);
+    }
 }
 
 export default new ProductsRepository();

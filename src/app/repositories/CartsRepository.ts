@@ -36,5 +36,12 @@ class CartsRepository {
             WHERE id = $4;
         `, [amount, total, updated_at, id]);
     }
+
+    async delete(id: string) {
+        await db.query(`
+            DELETE FROM carts
+            WHERE id=$1
+        `, [id]);
+    }
 }
 export default new CartsRepository();

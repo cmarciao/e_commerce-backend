@@ -82,7 +82,7 @@ class CartService {
         }
 
         const amount = await CartItemsRepository.getProductsAmount(cartDb.id);
-        const total = await CartItemsRepository.getProductsTotal(cartDb.id);
+        const total = await CartItemsRepository.getCartItemsTotalPrice(cartDb.id);
 
         await CartsRepository.update(cartDb.id, amount, total, new Date());
 
@@ -116,7 +116,7 @@ class CartService {
             throw new AppError('Product not exists!');
         }
         
-        await CartItemsRepository.delete(product_id);
+        await CartItemsRepository.deleteOneItemByProductId(product_id);
 
         
         return this.listCartItemsUpdated(cartDb, user_id);
@@ -142,7 +142,7 @@ class CartService {
             throw new AppError('Product not exists!');
         }
         
-        await CartItemsRepository.deleteCartItemByProductId(product_id);
+        await CartItemsRepository.deleteAllItemsByProductId(product_id);
 
         return this.listCartItemsUpdated(cartDb, user_id);
     }
@@ -172,7 +172,7 @@ class CartService {
         }
 
         const amount = await CartItemsRepository.getProductsAmount(cartDb.id);
-        const total = await CartItemsRepository.getProductsTotal(cartDb.id);
+        const total = await CartItemsRepository.getCartItemsTotalPrice(cartDb.id);
 
         await CartsRepository.update(cartDb.id, amount, total, new Date());
 
