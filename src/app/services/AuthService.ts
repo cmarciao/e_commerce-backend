@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 import { AppError } from "../errors/AppError";
 import { compareEncrypt } from "../utils/crypt";
+
 import UsersRepository from "../repositories/UsersRepository";
 
 interface DecodedToken {

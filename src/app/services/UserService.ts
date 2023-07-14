@@ -1,7 +1,6 @@
-import UsersRepository from "../repositories/UsersRepository";
-
 import { AppError } from "../errors/AppError";
 import { encryptData } from "../utils/crypt";
+import UsersRepository from "../repositories/UsersRepository";
 
 class UserService {
     async createUser(name: string, email: string, password: string) {

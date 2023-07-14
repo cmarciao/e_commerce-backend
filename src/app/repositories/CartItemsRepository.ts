@@ -40,6 +40,17 @@ class CartItemsRepository {
         
         return response.amount;
     }
+
+    async getProductsAmountById(product_id: string): Promise<number> {
+        const { rows } = await db.query(`
+            SELECT COUNT(*) AS amount
+            FROM cart_items
+            WHERE product_id = $1
+        `, [product_id]);
+        const [response] = rows;
+        
+        return response.amount;
+    }
     
     async getCartItemsTotalPrice(cart_id: string) {
         const { rows } = await db.query(`

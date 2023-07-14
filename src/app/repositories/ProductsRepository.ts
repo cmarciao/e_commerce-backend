@@ -5,7 +5,11 @@ type ICreateProduct = Omit<Product, 'id'>
 
 class ProductsRepository {
     async findAll() {
-        const {rows: response} = await db.query("SELECT * FROM products");
+        const {rows: response} = await db.query(`
+            SELECT *
+            FROM products
+            WHERE stock_quantity != 0;
+        `);
         return response;
     }
 

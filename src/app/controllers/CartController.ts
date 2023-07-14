@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 
-import CartService from "../services/CartService";
 import { AppError } from "../errors/AppError";
+import CartService from "../services/CartService";
 
 interface DecodedToken {
     id: string;
@@ -19,7 +19,13 @@ class CartController {
             const cart = await CartService.getCartByUserId(decoded.id);
             
             return res.status(200).json(cart);
-        } catch {
+        } catch(err) {
+            console.log(err);
+            
+            if(err instanceof AppError) {
+                throw err;
+            }
+
             throw new AppError('Invalid token', 401);
         }
     }
@@ -34,7 +40,13 @@ class CartController {
             const cart = await CartService.addProducts(decoded.id, product_ids);
     
             return res.status(201).json(cart);
-        } catch {
+        } catch(err) {
+            console.log(err);
+            
+            if(err instanceof AppError) {
+                throw err;
+            }
+
             throw new AppError('Invalid token', 401);
         }
     }
@@ -50,7 +62,13 @@ class CartController {
             const cart = await CartService.removeProduct(decoded.id, product_id)
 
             return res.status(200).json(cart);
-        } catch {
+        } catch(err) {
+            console.log(err);
+            
+            if(err instanceof AppError) {
+                throw err;
+            }
+
             throw new AppError('Invalid token', 401);
         }
     }
@@ -66,7 +84,13 @@ class CartController {
             const cart = await CartService.removeCartItem(decoded.id, product_id)
 
             return res.status(200).json(cart);
-        } catch {
+        } catch(err) {
+            console.log(err);
+            
+            if(err instanceof AppError) {
+                throw err;
+            }
+
             throw new AppError('Invalid token', 401);
         }
     }

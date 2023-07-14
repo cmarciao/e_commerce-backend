@@ -22,6 +22,11 @@ class SaleController {
             return res.status(200).json(sales);
         } catch(err) {
             console.log(err);
+            
+            if(err instanceof AppError) {
+                throw err;
+            }
+
             throw new AppError('Invalid token', 401);
         }
     }
@@ -37,6 +42,12 @@ class SaleController {
     
             return res.sendStatus(201);
         } catch(err) {
+            console.log(err);
+            
+            if(err instanceof AppError) {
+                throw err;
+            }
+
             throw new AppError('Invalid token', 401);
         }
     }

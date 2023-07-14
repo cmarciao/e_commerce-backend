@@ -1,12 +1,15 @@
 import { AppError } from "../errors/AppError";
+
 import { Cart } from "../models/Cart";
 import { CartResponse } from "../models/CartResponse";
-import CartItemsRepository from "../repositories/CartItemsRepository";
+
 import CartsRepository from "../repositories/CartsRepository";
-import ProductsRepository from "../repositories/ProductsRepository";
 import UsersRepository from "../repositories/UsersRepository";
-import CartItemService from "./CartItemService";
+import CartItemsRepository from "../repositories/CartItemsRepository";
+import ProductsRepository from "../repositories/ProductsRepository";
+
 import ProductService from "./ProductService";
+import CartItemService from "./CartItemService";
 
 class CartService {
     async getCartByUserId(user_id: string) {
@@ -63,9 +66,9 @@ class CartService {
             throw new AppError('Some product not exists!');
         }
         
-        const cartDb = await CartsRepository.findByUserId(user_id);
+        let cartDb = await CartsRepository.findByUserId(user_id);
         if(!cartDb) {
-            throw new AppError('Cart not exists!');
+            cartDb = await CartsRepository.create({ user_id, amount: 0, total: 0 });
         }
 
         await CartItemService.createProducts(cartDb, product_ids);
