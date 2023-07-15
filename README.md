@@ -34,7 +34,7 @@
 2. **auth**
   - 1. **post /** → Fazer login
   - 2. **get /me** → Pegar informações do usuário autenticado
-4. **products**
+3. **products**
  - 1. **get /proddcts** → Listar todos os produtos
  - 2. **post /products** → Criar um novo produto
 4. **carts**
