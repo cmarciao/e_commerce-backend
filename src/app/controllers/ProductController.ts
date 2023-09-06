@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
-import Product from "../models/Product";
-import ProductService from "../services/ProductService";
+import Product from '../models/Product';
+import ProductService from '../services/ProductService';
 
 type ICreateProduct = Omit<Product, 'id'>
 
@@ -22,6 +22,20 @@ class ProductController {
         const product = await ProductService.createProduct({ name, price, url_photo, stock_quantity });
 
         return res.status(201).json(product);
+    }
+
+    async update(req: Request, res: Response) {
+        const { id } = req.params;
+        const {
+            name,
+            url_photo,
+            price,
+            stock_quantity
+        } = req.body;
+
+        const updatedProduct = await ProductService.updateProduct({ id, name, url_photo, price, stock_quantity });
+
+        return res.status(200).json(updatedProduct);
     }
 }
 
